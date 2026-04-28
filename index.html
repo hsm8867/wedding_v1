@@ -672,6 +672,271 @@
     transform: translateY(0);
   }
 
+  /* ── Envelope Opening ── */
+  .envelope-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(180deg, #F5F0E8 0%, #EDE7DC 100%);
+    transition: opacity 0.8s ease;
+  }
+
+  .envelope-overlay.hidden {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .envelope-scene {
+    perspective: 1200px;
+    width: 300px;
+    height: 400px;
+    position: relative;
+  }
+
+  .envelope {
+    position: relative;
+    width: 300px;
+    height: 200px;
+    margin-top: 100px;
+  }
+
+  /* Envelope body */
+  .envelope-body {
+    position: absolute;
+    width: 300px;
+    height: 200px;
+    background: linear-gradient(145deg, #F7F2EA, #EDE5D8);
+    border-radius: 4px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.1), 0 2px 8px rgba(0,0,0,0.06);
+    z-index: 2;
+    overflow: hidden;
+  }
+
+  .envelope-body::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 60%;
+    background: linear-gradient(180deg, transparent, rgba(196,162,101,0.05));
+  }
+
+  /* Envelope flap (the triangular top) */
+  .envelope-flap {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 300px;
+    height: 200px;
+    z-index: 4;
+    transform-origin: top center;
+    transform-style: preserve-3d;
+    transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .envelope-flap-face {
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-left: 150px solid transparent;
+    border-right: 150px solid transparent;
+    border-top: 120px solid #E8E0D2;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.08));
+  }
+
+  .envelope-flap-back {
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-left: 150px solid transparent;
+    border-right: 150px solid transparent;
+    border-top: 120px solid #F0E8DA;
+    transform: rotateX(180deg);
+    backface-visibility: hidden;
+  }
+
+  .envelope-flap.open {
+    transform: rotateX(-180deg);
+  }
+
+  /* Inner triangles (left and right) */
+  .envelope-inner-left {
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-bottom: 120px solid #EFE7D9;
+    border-left: 150px solid transparent;
+    border-right: 0 solid transparent;
+    z-index: 1;
+    bottom: 0;
+    left: 0;
+  }
+
+  .envelope-inner-right {
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-bottom: 120px solid #EDE5D7;
+    border-right: 150px solid transparent;
+    border-left: 0 solid transparent;
+    z-index: 1;
+    bottom: 0;
+    right: 0;
+  }
+
+  /* Bottom flap */
+  .envelope-bottom {
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-top: 100px solid #E5DDD0;
+    border-left: 150px solid transparent;
+    border-right: 150px solid transparent;
+    bottom: 0;
+    z-index: 3;
+  }
+
+  /* Card inside envelope */
+  .envelope-card {
+    position: absolute;
+    width: 260px;
+    height: 180px;
+    background: var(--warm-white);
+    border-radius: 3px;
+    left: 20px;
+    top: 10px;
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    transition: transform 1s cubic-bezier(0.4, 0, 0.2, 1) 0.6s;
+    border: 1px solid rgba(196,162,101,0.15);
+  }
+
+  .envelope-card.rise {
+    transform: translateY(-220px);
+  }
+
+  .envelope-card-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 11px;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 16px;
+  }
+
+  .envelope-card-names {
+    font-family: 'Great Vibes', cursive;
+    font-size: 32px;
+    color: var(--text-dark);
+    line-height: 1.4;
+    text-align: center;
+  }
+
+  .envelope-card-ampersand {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 18px;
+    color: var(--gold);
+    margin: 2px 0;
+  }
+
+  .envelope-card-date {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 12px;
+    letter-spacing: 3px;
+    color: var(--text-light);
+    margin-top: 16px;
+  }
+
+  /* Wax seal */
+  .wax-seal {
+    position: absolute;
+    top: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 48px;
+    height: 48px;
+    z-index: 5;
+    cursor: pointer;
+    transition: transform 0.3s ease, opacity 0.5s ease;
+  }
+
+  .wax-seal:active {
+    transform: translateX(-50%) scale(0.95);
+  }
+
+  .wax-seal.removed {
+    opacity: 0;
+    transform: translateX(-50%) scale(0.5) rotate(20deg);
+    pointer-events: none;
+  }
+
+  .wax-seal-circle {
+    width: 48px;
+    height: 48px;
+    background: radial-gradient(circle at 35% 35%, #C75050, #9B2D2D);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 3px 10px rgba(155,45,45,0.4), inset 0 1px 2px rgba(255,255,255,0.2);
+  }
+
+  .wax-seal-circle span {
+    font-family: 'Great Vibes', cursive;
+    font-size: 20px;
+    color: rgba(255,255,255,0.9);
+    margin-top: -2px;
+  }
+
+  .open-text {
+    text-align: center;
+    margin-top: 36px;
+    font-size: 13px;
+    font-weight: 300;
+    color: var(--text-light);
+    letter-spacing: 2px;
+    opacity: 0;
+    animation: fadeIn 1s ease 0.5s forwards;
+  }
+
+  .open-text.hide {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  /* Snow effect */
+  .snow-container {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    pointer-events: none;
+    z-index: 9998;
+    overflow: hidden;
+  }
+
+  .snowflake {
+    position: absolute;
+    top: -10px;
+    background: white;
+    border-radius: 50%;
+    opacity: 0.7;
+    animation: snowfall linear infinite;
+  }
+
+  @keyframes snowfall {
+    0% { transform: translateY(-10px) translateX(0) rotate(0deg); }
+    25% { transform: translateY(25vh) translateX(15px) rotate(90deg); }
+    50% { transform: translateY(50vh) translateX(-10px) rotate(180deg); }
+    75% { transform: translateY(75vh) translateX(20px) rotate(270deg); }
+    100% { transform: translateY(105vh) translateX(-5px) rotate(360deg); }
+  }
+
   /* ── Responsive ── */
   @media (max-width: 380px) {
     .couple-names-en { font-size: 38px; }
@@ -681,6 +946,48 @@
 </style>
 </head>
 <body>
+
+<!-- ━━ SNOW EFFECT ━━ -->
+<div class="snow-container" id="snowContainer"></div>
+
+<!-- ━━ ENVELOPE OPENING ━━ -->
+<div class="envelope-overlay" id="envelopeOverlay">
+  <div class="envelope-scene">
+    <div class="envelope">
+      <!-- Card inside -->
+      <div class="envelope-card" id="envelopeCard">
+        <p class="envelope-card-title">Wedding Invitation</p>
+        <div class="envelope-card-names">
+          Sumin
+          <div class="envelope-card-ampersand">&</div>
+          Heekyung
+        </div>
+        <p class="envelope-card-date">2027. 12. 18</p>
+      </div>
+
+      <!-- Envelope structure -->
+      <div class="envelope-body"></div>
+      <div class="envelope-inner-left"></div>
+      <div class="envelope-inner-right"></div>
+      <div class="envelope-bottom"></div>
+
+      <!-- Flap -->
+      <div class="envelope-flap" id="envelopeFlap">
+        <div class="envelope-flap-face"></div>
+        <div class="envelope-flap-back"></div>
+      </div>
+
+      <!-- Wax seal -->
+      <div class="wax-seal" id="waxSeal" onclick="openEnvelope()">
+        <div class="wax-seal-circle">
+          <span>♥</span>
+        </div>
+      </div>
+    </div>
+
+    <p class="open-text" id="openText">봉투를 터치하여 열어보세요</p>
+  </div>
+</div>
 
 <div class="invitation-wrapper">
 
@@ -715,7 +1022,7 @@
         Heekyung
       </div>
       <p class="couple-names-kr">함수민 · 탁희경</p>
-      <p class="wedding-date-hero">2026. 12. 19 SAT PM 1:00</p>
+      <p class="wedding-date-hero">2027. 12. 18 SAT PM 1:00</p>
     </div>
 
     <div class="floral-bottom">
@@ -764,14 +1071,14 @@
         <div class="parent-side">
           <p class="parent-label">Groom</p>
           <p class="parent-names">
-            함OO<span class="dot-separator">·</span>OOO<br>
+            함복주<span class="dot-separator">·</span>이지영<br>
             의 아들 <span class="child-name">수민</span>
           </p>
         </div>
         <div class="parent-side">
           <p class="parent-label">Bride</p>
           <p class="parent-names">
-            탁OO<span class="dot-separator">·</span>OOO<br>
+            탁준표<span class="dot-separator">·</span>이숙희<br>
             의 딸 <span class="child-name">희경</span>
           </p>
         </div>
@@ -791,9 +1098,9 @@
       <h2 class="section-title-kr">예식 일시</h2>
 
       <div class="date-display">
-        <p class="date-big">19</p>
-        <p class="date-month-year">December 2026</p>
-        <p class="date-kr">2026년 12월 19일 토요일 오후 1시</p>
+        <p class="date-big">18</p>
+        <p class="date-month-year">December 2027</p>
+        <p class="date-kr">2027년 12월 18일 토요일 오후 1시</p>
       </div>
 
       <div class="calendar-grid">
@@ -804,36 +1111,37 @@
         <div class="cal-header">T</div>
         <div class="cal-header">F</div>
         <div class="cal-header">S</div>
-        <!-- Dec 2026 starts on Tuesday -->
+        <!-- Dec 2027 starts on Wednesday -->
+        <div class="cal-day empty"></div>
         <div class="cal-day empty"></div>
         <div class="cal-day empty"></div>
         <div class="cal-day">1</div>
         <div class="cal-day">2</div>
         <div class="cal-day">3</div>
         <div class="cal-day">4</div>
-        <div class="cal-day">5</div>
-        <div class="cal-day sun">6</div>
+        <div class="cal-day sun">5</div>
+        <div class="cal-day">6</div>
         <div class="cal-day">7</div>
         <div class="cal-day">8</div>
         <div class="cal-day">9</div>
         <div class="cal-day">10</div>
         <div class="cal-day">11</div>
-        <div class="cal-day">12</div>
-        <div class="cal-day sun">13</div>
+        <div class="cal-day sun">12</div>
+        <div class="cal-day">13</div>
         <div class="cal-day">14</div>
         <div class="cal-day">15</div>
         <div class="cal-day">16</div>
         <div class="cal-day">17</div>
-        <div class="cal-day">18</div>
-        <div class="cal-day highlight">19</div>
-        <div class="cal-day sun">20</div>
+        <div class="cal-day highlight">18</div>
+        <div class="cal-day sun">19</div>
+        <div class="cal-day">20</div>
         <div class="cal-day">21</div>
         <div class="cal-day">22</div>
         <div class="cal-day">23</div>
         <div class="cal-day">24</div>
         <div class="cal-day">25</div>
-        <div class="cal-day">26</div>
-        <div class="cal-day sun">27</div>
+        <div class="cal-day sun">26</div>
+        <div class="cal-day">27</div>
         <div class="cal-day">28</div>
         <div class="cal-day">29</div>
         <div class="cal-day">30</div>
@@ -973,12 +1281,12 @@
           <button class="copy-btn" onclick="copyAccount('국민은행 123-456-789012')">복사하기</button>
         </div>
         <div class="account-card">
-          <p class="account-holder">아버지 함OO</p>
+          <p class="account-holder">아버지 함복주</p>
           <p class="account-number">신한은행 110-234-567890</p>
           <button class="copy-btn" onclick="copyAccount('신한은행 110-234-567890')">복사하기</button>
         </div>
         <div class="account-card">
-          <p class="account-holder">어머니 OOO</p>
+          <p class="account-holder">어머니 이지영</p>
           <p class="account-number">우리은행 1002-345-678901</p>
           <button class="copy-btn" onclick="copyAccount('우리은행 1002-345-678901')">복사하기</button>
         </div>
@@ -991,12 +1299,12 @@
           <button class="copy-btn" onclick="copyAccount('카카오뱅크 3333-12-3456789')">복사하기</button>
         </div>
         <div class="account-card">
-          <p class="account-holder">아버지 탁OO</p>
+          <p class="account-holder">아버지 탁준표</p>
           <p class="account-number">하나은행 234-567890-12345</p>
           <button class="copy-btn" onclick="copyAccount('하나은행 234-567890-12345')">복사하기</button>
         </div>
         <div class="account-card">
-          <p class="account-holder">어머니 OOO</p>
+          <p class="account-holder">어머니 이숙희</p>
           <p class="account-number">농협은행 302-1234-5678-91</p>
           <button class="copy-btn" onclick="copyAccount('농협은행 302-1234-5678-91')">복사하기</button>
         </div>
@@ -1026,7 +1334,7 @@
   <footer class="footer">
     <div class="reveal">
       <p class="footer-names">Sumin & Heekyung</p>
-      <p class="footer-date">2026. 12. 19</p>
+      <p class="footer-date">2027. 12. 18</p>
       <div class="dday-counter">
         <p class="dday-label">D-DAY</p>
         <p class="dday-number" id="dday"></p>
@@ -1037,9 +1345,65 @@
 </div>
 
 <script>
+  // ── Envelope Opening ──
+  function openEnvelope() {
+    const seal = document.getElementById('waxSeal');
+    const flap = document.getElementById('envelopeFlap');
+    const card = document.getElementById('envelopeCard');
+    const overlay = document.getElementById('envelopeOverlay');
+    const openText = document.getElementById('openText');
+
+    // Step 1: Remove wax seal
+    seal.classList.add('removed');
+    openText.classList.add('hide');
+
+    // Step 2: Open flap
+    setTimeout(() => {
+      flap.classList.add('open');
+    }, 400);
+
+    // Step 3: Card rises out
+    setTimeout(() => {
+      card.classList.add('rise');
+    }, 1000);
+
+    // Step 4: Fade out overlay, show invitation
+    setTimeout(() => {
+      overlay.classList.add('hidden');
+      document.body.style.overflow = 'auto';
+    }, 2400);
+
+    // Step 5: Remove overlay from DOM
+    setTimeout(() => {
+      overlay.remove();
+    }, 3200);
+  }
+
+  // Prevent scroll while envelope is visible
+  document.body.style.overflow = 'hidden';
+
+  // ── Snow Effect ──
+  function createSnow() {
+    const container = document.getElementById('snowContainer');
+    const snowCount = 40;
+    for (let i = 0; i < snowCount; i++) {
+      const flake = document.createElement('div');
+      flake.classList.add('snowflake');
+      const size = Math.random() * 4 + 2;
+      flake.style.width = size + 'px';
+      flake.style.height = size + 'px';
+      flake.style.left = Math.random() * 100 + '%';
+      flake.style.opacity = Math.random() * 0.6 + 0.2;
+      flake.style.animationDuration = (Math.random() * 8 + 6) + 's';
+      flake.style.animationDelay = (Math.random() * 10) + 's';
+      container.appendChild(flake);
+    }
+  }
+  createSnow();
+
   // ── D-Day Counter ──
   function updateDday() {
-    const wedding = new Date('2026-12-19T13:00:00+09:00');
+    const wedding = new Date('2027-12-18T13:00:00+09:00');
     const now = new Date();
     const diff = Math.ceil((wedding - now) / (1000 * 60 * 60 * 24));
     const el = document.getElementById('dday');
